@@ -7,7 +7,7 @@ const reviewSchema = new mongoose.Schema({
     comment: { type: String, required: true, default: "Not Given" },
     rate: { type: Number, required: true, min: 1, max: 5, default: "0" },
     exp: { type: String, required: true, default: "Not Given" },
-    submitAt: { 
+    submitedAt: { 
         type: String, 
         default: () => new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }) 
     },

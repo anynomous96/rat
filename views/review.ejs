@@ -39,6 +39,7 @@
         display: flex;
         justify-content: center;
         margin-bottom: 25px;
+        animation: fadeIn 1.5s ease;
       }
 
       img {
@@ -59,6 +60,7 @@
         font-weight: 700;
         color: #222;
         margin-bottom: 12px;
+        animation: fadeIn 1.5s ease;
       }
 
       form > div:first-of-type {
@@ -71,6 +73,7 @@
         margin-bottom: 30px;
         color: #555;
         line-height: 1.5;
+        animation: slideUp 1.5s ease;
       }
 
       .form-section {
@@ -84,6 +87,7 @@
         font-size: 17px;
         text-align: left;
         color: #333;
+        animation: fadeIn 1.5s ease;
       }
 
       input[type="text"],
@@ -97,6 +101,7 @@
         margin-bottom: 25px;
         transition: all 0.3s ease;
         background-color: #f9fbff;
+        animation: slideUp 1.5s ease;
       }
 
       input:focus,
@@ -111,6 +116,7 @@
       textarea {
         min-height: 140px;
         resize: vertical;
+        animation: slideUp 1.5s ease;
       }
 
       .rating-question {
@@ -118,6 +124,7 @@
         font-size: 16px;
         color: #666;
         text-align: left;
+        animation: slideUp 1.5s ease;
       }
 
       /* Star Rating System */
@@ -126,6 +133,7 @@
         margin-bottom: 5px;
         justify-content: flex-end;
         flex-direction: row-reverse;
+        animation: slideUp 1.5s ease;
       }
 
       .star-rating input {
@@ -175,6 +183,7 @@
         justify-content: space-between;
         margin-bottom: 35px;
         width: 100%;
+        animation: slideUp 1.5s ease;
       }
 
       .emoji-rating input {
@@ -223,7 +232,7 @@
       }
 
       button {
-        background: linear-gradient(90deg, #0052cc, #0d6deb);
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
         color: white;
         border: none;
         padding: 16px 25px;
@@ -237,7 +246,7 @@
         position: relative;
         overflow: hidden;
         z-index: 1;
-        box-shadow: 0 5px 15px rgba(13, 109, 235, 0.3);
+        box-shadow: 0 5px 15px #2575fc;
       }
 
       button::before {
@@ -247,7 +256,7 @@
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, #0d6deb, #4d94ff);
+        background: linear-gradient(135deg, #7110da 0%, #1e6ffc 100%);
         transition: left 0.5s;
         z-index: -1;
       }
@@ -258,7 +267,7 @@
 
       button:hover {
         transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(13, 109, 235, 0.4);
+        box-shadow: 0 8px 20px rgba(13, 109, 235, 0.548);
       }
 
       button:active {
@@ -269,7 +278,7 @@
       .star-labels {
         display: flex;
         justify-content: flex-start;
-        width: calc(45px * 5 + 12px * 4); /* Width of all stars + gaps */
+        width: calc(45px * 5 + 36px * 4); /* Width of all stars + gaps */
         margin-top: 5px;
         margin-bottom: 25px;
       }
@@ -281,6 +290,16 @@
         color: #666;
         margin-right: 12px;
       }
+
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+        from { transform: translateY(30px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
 
       /* Responsive design */
       @media (max-width: 768px) {
@@ -385,7 +404,7 @@
         <div class="pr">Parents Review</div>
         <div class="form-intro">
           We would love to know about your experience of our exhibition! Your
-          feedback helps us improve.
+          feedback helps us to improve.
         </div>
 
         <form action="/review" method="post">
@@ -414,7 +433,7 @@
                 type="text"
                 name="childrenName"
                 id="childrenName"
-                placeholder="Your children's name"
+                placeholder="Your children's name with their class"
                 required
               />
 
@@ -454,7 +473,7 @@
             <div class="form-section">
               <label>Satisfaction Level</label>
               <div class="rating-question">
-                How happy are you with our service?
+                How happy are you with this service?
               </div>
               <div class="emoji-rating">
                 <input

@@ -16,7 +16,7 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 
 
-mongoose.connect("mongodb+srv://anmol_60754:password_9900@cluster0.ndbuizv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
+mongoose.connect(process.env.DB, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {
