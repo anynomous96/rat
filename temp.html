@@ -3,6 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/locomotive-scroll@3.5.4/dist/locomotive-scroll.css"
+    />
     <title>Parents Review Form</title>
     <style>
       * {
@@ -379,7 +383,7 @@
         <div class="logo">
           <img
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSthCIiVMi_XLRQD0WEmcLlIMLdBSjgGXhaOQ&s"
-            alt="Exhibition Logo"
+            alt="Logo"
           />
         </div>
         <div class="pr">Parents Review</div>
@@ -507,5 +511,86 @@
         </form>
       </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@3.5.4/dist/locomotive-scroll.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/gsap.min.js"
+      integrity="sha512-f6bQMg6nkSRw/xfHw5BCbISe/dJjXrVGfz9BSDwhZtiErHwk7ifbmBEtF9vFW8UNIQPhV2uEFVyI/UHob9r7Cw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/ScrollTrigger.min.js"
+      integrity="sha512-AcqPGqrrAEtEwe+ADO5R8RbdFi7tuU7b/A2cJJH0Im0D18NRk5p5s4B3E5PMuO81KFw0ClN7J5SHVUJz7KOb0A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <script>
+      function locomotiveAnimation() {
+        gsap.registerPlugin(ScrollTrigger);
+
+        const locoScroll = new LocomotiveScroll({
+          el: document.querySelector(".maan"),
+          smooth: true,
+
+          // for tablet smooth
+          tablet: { smooth: true },
+
+          // for mobile
+          smartphone: { smooth: true },
+        });
+        locoScroll.on("scroll", ScrollTrigger.update);
+
+        ScrollTrigger.scrollerProxy(".maan", {
+          scrollTop(value) {
+            return arguments.length
+              ? locoScroll.scrollTo(value, 0, 0)
+              : locoScroll.scroll.instance.scroll.y;
+          },
+          getBoundingClientRect() {
+            return {
+              top: 0,
+              left: 0,
+              width: window.innerWidth,
+              height: window.innerHeight,
+            };
+          },
+        });
+
+        ScrollTrigger.addEventListener("refresh", () => locoScroll.update());
+
+        ScrollTrigger.refresh();
+      }
+
+      function loadingAnimation() {
+        var tl = gsap.timeline();
+        tl.from(".maan", {
+          opacity: 0,
+          duration: 0.2,
+          delay: 0.2,
+        });
+        tl.from(".maan", {
+          transform: "scaleX(0.7) scaleY(0.2) translateY(80%)",
+
+          duration: 2,
+          ease: "expo.out",
+        });
+        tl.from("logo", {
+          opacity: 0,
+          delay: -0.9,
+        });
+        tl.from(
+          ".maan form, .maan .pr, .maan .form-intro, .maaan .form-section",
+          {
+            opacity: 0,
+            duration: 0.5,
+            stagger: 0.2,
+          }
+        );
+      }
+
+      locomotiveAnimation();
+      loadingAnimation();
+    </script>
   </body>
 </html>

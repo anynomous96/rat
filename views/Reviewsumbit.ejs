@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanks !!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f7f7;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            animation: fadeIn 1.5s ease;
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            font-weight: 300;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeIn 2s ease;
+        }
+        
+        .content-section {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            animation: slideUp 1s ease;
+        }
+        
+        h2 {
+            color: #444;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        
+        p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .testimonials {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .testimonial {
+            background-color: #f9f7ff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+        
+        .testimonial:before {
+            content: '"';
+            font-size: 60px;
+            color: rgba(106, 17, 203, 0.1);
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            line-height: 1;
+        }
+        
+        .quote {
+            font-style: italic;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .parent-name {
+            font-weight: bold;
+            color: #6a11cb;
+        }
+        
+        .cta {
+            text-align: center;
+            margin-top: 40px;
+            padding: 30px;
+        }
+        
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(37, 117, 252, 0.3);
+        }
+        
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(37, 117, 252, 0.4);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .content-section {
+                padding: 30px 20px;
+            }
+            
+            .testimonials {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Thank You !</h1>
+            <div class="subtitle">Your participation and valuable feedback have made our exhibition a remarkable success</div>
+        </header>
+        
+        <section class="content-section">
+            <h2>A Heartfelt Thank You</h2>
+            <p>On behalf of our school, we extend our sincere gratitude to all parents who attended our exhibition and provided their insightful reviews. Your presence was instrumental in making this event truly exceptional.</p>
+            <p>We understand your time, and we deeply appreciate that you choose to spend it with us. Your engagement not only encouraged our students but also validated the hard work and dedication they invested in their projects.</p>
+            <p>The valuable review you shared will guide our future initiatives and help us improve the quality of our programs. Your input is essential to our continued growth and success.</p>
+        </section>
+             
+        <section class="content-section">
+            <h2>Looking Forward</h2>
+            <p>As we reflect on the success of this exhibition, we are planning future events that will showcase the talents and achievements of our students. Your continued support and involvement are invaluable to us.</p>
+            <p>We are committed to maintaining the high standards you expect and deserve. Your partnership in this educational journey strengthens our community and enhances the learning experience for all students.</p>
+            
+            <div class="cta">
+                <a href="#" class="button">Stay Connected</a>
+            </div>
+        </section>
+        
+        <footer>
+            <p>© 2025 School Exhibition Team. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

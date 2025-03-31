@@ -1,17 +1,17 @@
 const mongoose = require("mongoose");
 
 const reviewSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    number: { type: Number, required: true },
-    childrenName: { type: String, required: true },
-    comment: { type: String, required: true },
-    rate: { type: Number, required: true, min: 1, max: 5 },
-    exp: { type: String, required: true },
-    createdAt: { 
+    name: { type: String, required: true, default: "Not Given" },
+    number: { type: Number, required: true, default: "0" },
+    childrenName: { type: String, required: true, default: "Not Given" },
+    comment: { type: String, required: true, default: "Not Given" },
+    rate: { type: Number, required: true, min: 1, max: 5, default: "0" },
+    exp: { type: String, required: true, default: "Not Given" },
+    submitAt: { 
         type: String, 
         default: () => new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }) 
-    }, // Stores date & time
-    ipAddress: { type: String, required: true } // Stores IP address
+    },
+    ipAddress: { type: String, required: true }
 });
 
 module.exports = mongoose.model("Review", reviewSchema);
