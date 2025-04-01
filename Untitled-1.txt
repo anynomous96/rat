@@ -1,0 +1,63 @@
+// Outer Part:-
+// npm init -y
+// Change main name to "app.js"
+// npm i expres msongoose bcrypt jsonwebtoken cookie-parser ejs
+// npm i bash bcrypt bcryptjs body-parser cookie-parser debug ejs express express-session http-errors jsonwebtoken mongoose morgan passport passport-local-mongoose 
+// Create model folder
+// And create user.js
+// Create views folder
+// And create index.ejs
+
+
+
+
+
+// User.js:-
+// Const mongoose = require('mongoose');
+// mongoose.connect("mongodb://127.0.0.1:27017/name");
+// Const userScema = mongoose.Schema({
+// email: string,
+// password: string
+// })
+
+// module.exports = mongoose.model('user', userSchema);
+
+
+
+
+
+// Form action="/" method="post"
+// input type email placeholder enter your email address name email
+// Input type password plaecholder enter your password name password
+
+
+
+
+
+// App.js:-
+// Const express = require('express');
+// Const app = express();
+// const userModel = require("./models/user");
+
+// app.set("view engine", "ejs");
+// app.use(express.json());
+// app.use(express.urlencoded({extended: true}));
+// app.use(cookieParser());
+
+// App.get('/', (req, res) => {
+// res.render("index")};
+
+// app.post('/', async (req, res) => {
+// let {email, password} = req.body;
+
+// bcrypt.gensalt(10, (err, salt) => {
+// bcrypt.hash(password, salt, async (err) => {
+// let user = await user.Model.create({
+// email,
+// password: hash
+// })
+// })
+// })
+// });
+
+// App.listen(3000);

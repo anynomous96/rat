@@ -1,0 +1,108 @@
+!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./stylesheets/style.css" />
+    <style>
+      body {
+        height: 100vh;
+        font-family: Arial, sans-serif;
+        background-color: #bababa;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .container1 {
+        height: 80%;
+        width: 27.5%;
+        margin: 0 auto;
+        padding: 9px;
+        background-color: #ffffff;
+        border-radius: 50px;
+        /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+        box-shadow: 32px 32px 64px #d5bfd2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .input{
+        height: 40px;
+      }
+
+
+      h2 {
+        text-align: center;
+        margin-bottom: 32px;
+      }
+
+      #email {
+        width: 90%;
+      }
+
+      .form-group {
+        margin-bottom: 20%;
+      }
+
+      .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .form-group input[type="email"],
+      .form-group input[type="password"] {
+        width: 100%;
+        padding: 5px;
+        padding-top: 3px;
+        font-size: 15px;
+        border-radius: 3px;
+        border: 1px solid #ccc;
+      }
+
+      .form-group input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        background-color: #4caf50;
+        color: #fff;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+
+      .form-group input[type="submit"]:hover {
+        background-color: #45a049;
+        box-shadow: 5px 5px 10px #00ff00;
+      }
+
+      .form-group input[type="reset"] {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        background-color: #ef4c4c;
+        color: #fff;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+
+      .form-group input[type="reset"]:hover {
+        background-color: #e04545;
+        box-shadow: 5px 5px 10px #ff0000;
+      }
+
+      .form-group input[type="submit"]:active {
+        scale: 0.9;
+        box-shadow: 10px 10px 10px #00ff00;
+      }
+      .form-group input[type="reset"]:active {
+        scale: 0.9;
+        box-shadow: 10px 10px 10px #ff0000;
+      }
+    </style>
+  </head>
+  <body>

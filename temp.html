@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .main {
+            display: flex;
+            justify-content: center;
+            margin-top: 20vh;
+        }
+
+        .pr {
+            display: flex;
+            justify-content: center;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <div class="maan">
+            <div class="pr">Parents Review</div>
+            <div>We would love to know about your experience of our exibhition!</div>
+            <form action="/review" method="post">
+
+                <div>
+                    <div>
+                        <label>Name</label>
+                        <div>
+                            <input type="text" placeholder="Your full name">
+                        </div>
+                        <label>Mobile number</label>
+                        <div>
+                            <input type="number" placeholder="Your mobile number">
+                        </div>
+                        <label>Parents of</label>
+                        <div>
+                            <input type="name" placeholder="Your children name">
+                        </div>
+                        <label>Feedback</label>
+                        <div>
+                            <input type="text" placeholder="Your feedback" required>
+                        </div>
+                        <label>Overall Rating</label>
+                        <div>
+                            Rate your overall experience</div>
+                        <div>
+                            <label>1
+                                <input class="experience-rating" name="oo" type="radio" value="1" required></label>
+                            <label>2
+                                <input class="experience-rating" name="oo" type="radio" value="2" required></label>
+                            <label>3
+                                <input class="experience-rating" name="oo" type="radio" value="3" required></label>
+                            <dlabel>4
+                                <input class="experience-rating" name="oo" type="radio" value="4" required></label>
+                                <label>5
+                                    <input class="experience-rating" name="oo" type="radio" value="5" required></label>
+                        </div>
+                        <div>
+                            <label>
+                                Satisfaction Level
+                            </label>
+                            <div>How happy are you with our service?</div>
+                            <div>
+                                <label>Awful
+                                    <input class="experience-rating" name="oa" type="radio" value="Awful"
+                                        required></label>
+                                <label>Poor
+                                    <input class="experience-rating" name="oa" type="radio" value="Poor"
+                                        required></label>
+                                <label>Ok
+                                    <input class="experience-rating" name="oa" type="radio" value="Ok" required></label>
+                                <dlabel>Good
+                                    <input class="experience-rating" name="oa" type="radio" value="Good"
+                                        required></label>
+                                    <label>Awesome
+                                        <input class="experience-rating" name="oa" type="radio" value="Awesome"
+                                            required></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button>
+                            <span>Submit Your Review !</span>
+                        </button>
+                    </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
