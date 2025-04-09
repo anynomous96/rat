@@ -108,7 +108,6 @@
                     <th>Feedback</th>
                     <th>Rating</th>
                     <th>Satisfaction</th>
-                    <th>IP Address</th>
                     <th>Submitted At</th>
                 </tr>
             </thead>
@@ -121,8 +120,7 @@
                         <td><%= review.comment %></td>
                         <td><%= review.rate %> ⭐</td>
                         <td><%= review.exp %></td>
-                        <td><%= review.ipAddress %></td>
-                        <td><%= review.createdAt %></td>
+                        <td><%= review.submitedAt %></td>
                     </tr>
                 <% }) %>
             </tbody>
