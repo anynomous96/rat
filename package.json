@@ -12,6 +12,7 @@
     "bash": "^0.0.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.3",
+    "chart.js": "^4.4.8",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.7",
     "debug": "^4.4.0",

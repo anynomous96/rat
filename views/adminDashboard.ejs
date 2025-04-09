@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        h2, h3 {
+            color: #2c3e50;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            background: #fff;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .stats p {
+            margin: 0;
+            font-size: 1.1em;
+        }
+
+        canvas {
+            margin: 30px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+        }
+
+        th {
+            background-color: #2c3e50;
+            color: #fff;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .btn {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 18px;
+            text-decoration: none;
+            border-radius: 6px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Admin Dashboard</h2>
+
+        <div class="stats">
+            <p>Total Reviews: <strong><%= totalReviews %></strong></p>
+            <p>Average Rating: <strong><%= averageRating %> ⭐</strong></p>
+        </div>
+
+        <h3>Satisfaction Levels</h3>
+        <canvas id="satisfactionChart" height="100"></canvas>
+
+        <h3>All Reviews</h3>
+        <a class="btn" onclick="downloadTable()">📥 Download CSV</a>
+
+        <table id="reviewsTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Mobile</th>
+                    <th>Children Name</th>
+                    <th>Feedback</th>
+                    <th>Rating</th>
+                    <th>Satisfaction</th>
+                    <th>IP Address</th>
+                    <th>Submitted At</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% reviews.forEach(review => { %>
+                    <tr>
+                        <td><%= review.name %></td>
+                        <td><%= review.number %></td>
+                        <td><%= review.childrenName %></td>
+                        <td><%= review.comment %></td>
+                        <td><%= review.rate %> ⭐</td>
+                        <td><%= review.exp %></td>
+                        <td><%= review.ipAddress %></td>
+                        <td><%= review.createdAt %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+
+        <div class="footer">
+            <a href="/admin/logout" class="btn">Logout</a>
+        </div>
+    </div>
+
+    <script>
+        const satisfactionData = {
+            labels: ["Awful", "Poor", "Ok", "Good", "Awesome"],
+            datasets: [{
+                label: "Satisfaction Levels",
+                data: [
+                    <%= satisfactionLevels.Awful %>,
+                    <%= satisfactionLevels.Poor %>,
+                    <%= satisfactionLevels.Ok %>,
+                    <%= satisfactionLevels.Good %>,
+                    <%= satisfactionLevels.Awesome %>
+                ],
+                backgroundColor: ["#e74c3c", "#f39c12", "#f1c40f", "#2ecc71", "#3498db"]
+            }]
+        };
+
+        new Chart(document.getElementById("satisfactionChart"), {
+            type: "bar",
+            data: satisfactionData,
+        });
+
+        function downloadTable() {
+            const rows = document.querySelectorAll("table tr");
+            let csv = [];
+
+            for (const row of rows) {
+                const cells = row.querySelectorAll("th, td");
+                const rowData = Array.from(cells).map(cell => `"${cell.innerText.replace(/"/g, '""')}"`);
+                csv.push(rowData.join(","));
+            }
+
+            const csvContent = "data:text/csv;charset=utf-8," + csv.join("\n");
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "reviews.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
