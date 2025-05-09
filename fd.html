@@ -1,0 +1,226 @@
+<head>
+  <meta charset="UTF-8" />
+  <title>code driven animation</title>
+  <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap");
+
+    html,
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+      font-family: "Montserrat", sans-serif;
+      font-weight: 900;
+      overflow: hidden;
+    }
+
+    .pov {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tray {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      align-items: center;
+      padding-bottom: 9px;
+    }
+
+    .cube-container {
+      width: 400px;
+      height: 55px;
+      perspective: 999px;
+    }
+
+    .cube {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+    }
+
+    .face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 60px;
+      color: white;
+      /* background: rgba(255, 255, 255, 0.1); */
+      backface-visibility: hidden;
+      transform-origin: 50% 50% -201px;
+      letter-spacing: -1px;
+      overflow: hidden;
+    }
+
+    .front {
+      transform: translateZ(200px);
+    }
+    .back {
+      transform: translateZ(-200px) rotateY(180deg);
+    }
+    .right {
+      transform: translateX(200px) rotateY(90deg);
+    }
+    .left {
+      transform: translateX(-200px) rotateY(-90deg);
+    }
+  </style>
+</head>
+<body>
+  <div class="pov">
+    <div class="tray">
+      <div class="cube-container">
+        <div class="cube">
+          <div class="face front">CODE</div>
+          <div class="face back">DRIVEN</div>
+          <div class="face right">ANIMATION</div>
+          <div class="face left">GSAP</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const n = 20;
+    const rots = [
+      { ry: 270, a: 0.5 },
+      { ry: 0, a: 0.85 },
+      { ry: 90, a: 0.4 },
+      { ry: 180, a: 0.0 },
+    ];
+
+    // Set initial positions
+    gsap.set(".face", {
+      z: 200,
+      rotateY: (i) => rots[i].ry,
+      transformOrigin: "50% 50% -201px",
+    });
+
+    // Create and animate cubes
+    for (let i = 0; i < n; i++) {
+      let die = document.querySelector(".cube-container");
+      let cube = die.querySelector(".cube");
+
+      if (i > 0) {
+        let clone = die.cloneNode(true);
+        document.querySelector(".tray").appendChild(clone);
+        cube = clone.querySelector(".cube");
+      }
+
+      // Create timeline for each cube
+      gsap
+        .timeline({
+          repeat: -1,
+          yoyo: true,
+          defaults: { ease: "power3.inOut", duration: 1 },
+        })
+        .fromTo(
+          cube,
+          {
+            rotateY: -90,
+          },
+          {
+            rotateY: 90,
+            ease: "power1.inOut",
+            duration: 2,
+          }
+        )
+        .fromTo(
+          cube.querySelectorAll(".face"),
+          {
+            color: (j) =>
+              `hsl(${(i / n) * 75 + 130}, 67%, ${
+                100 * [rots[3].a, rots[0].a, rots[1].a][j]
+              }%)`,
+          },
+          {
+            color: (j) =>
+              `hsl(${(i / n) * 75 + 130}, 67%, ${
+                100 * [rots[0].a, rots[1].a, rots[2].a][j]
+              }%)`,
+          },
+          0
+        )
+        .to(
+          cube.querySelectorAll(".face"),
+          {
+            color: (j) =>
+              `hsl(${(i / n) * 75 + 130}, 67%, ${
+                100 * [rots[1].a, rots[2].a, rots[3].a][j]
+              }%)`,
+          },
+          1
+        )
+        .progress(i / n);
+    }
+
+    // Add tray animations
+    gsap
+      .timeline()
+      .from(
+        ".tray",
+        {
+          yPercent: -3,
+          duration: 2,
+          ease: "power1.inOut",
+          yoyo: true,
+          repeat: -1,
+        },
+        0
+      )
+      .fromTo(
+        ".tray",
+        {
+          rotate: -15,
+        },
+        {
+          rotate: 15,
+          duration: 4,
+          ease: "power1.inOut",
+          yoyo: true,
+          repeat: -1,
+        },
+        0
+      )
+      .from(
+        ".cube-container",
+        {
+          duration: 0.01,
+          opacity: 0,
+          stagger: {
+            each: -0.05,
+            ease: "power1.in",
+          },
+        },
+        0
+      )
+      .to(
+        ".tray",
+        {
+          scale: 1.2,
+          duration: 2,
+          ease: "power3.inOut",
+          yoyo: true,
+          repeat: -1,
+        },
+        0
+      );
+
+    // Handle responsive scaling
+    window.onload = window.onresize = () => {
+      const h = n * 56;
+      gsap.set(".tray", { height: h });
+      gsap.set(".pov", { scale: innerHeight / h });
+    };
+  </script>
+</body>
