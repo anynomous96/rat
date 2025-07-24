@@ -1,0 +1,200 @@
+<html>
+    <head>
+        <title>Page Title</title>
+        <style>
+            body{
+                background-color: #ececff;
+            }
+
+            .center{
+                position: absolute;
+                margin:auto;
+                left:0;
+                top:0;
+                bottom:0;
+                right:0;
+                width:250px;
+                height:250px;
+                background-color: #42a5f5;
+                border-radius: 0.5px;
+                box-shadow:0px 0px 50px 3px #000;
+                animation: ani 3.1s infinite;
+                animation-delay: 0.2s;
+            }
+
+            span {
+                left: 10%;
+                top:10%;
+                box-shadow: 0px 0px 25px #000000;
+            }
+            span:nth-child(1 ){
+                position: absolute;
+                width: 220px;
+                height: 220px;
+                background-color: #90caf9;
+                border-radius: 1px;
+                left: 6%;
+                top: 6%;
+                animation: ani 3.1s infinite;
+                animation-delay: 0.3s;
+            }
+            span:nth-child(2){
+                position: absolute;
+                width: 200px;
+                height: 200px;
+                background: #bbdefb;
+                border-radius: 1px;
+                left: 10%;
+                top: 10%;
+                animation : ani 3.1s infinite;
+                animation-delay :0.35s;
+            }
+            span:nth-child(3){
+                position: absolute ;
+                width: 180px;
+                height: 180px;
+                background-color: #e3f2fd;
+                border-radius: 1px;
+                left: 14%;
+                top: 14%;
+                animation: ani 3.1s infinite;
+                animation-delay: 0.4s;
+            }
+            span:nth-child(4){
+                position: absolute ;
+                height:160px;
+                width: 160px;
+                background: #90caf9;
+                border-radius: 1px;
+                left: 18%;
+                top: 18%;
+                animation: ani 3s infinite;
+                animation-delay : 0.4s;
+            }
+            span:nth-child(5){
+                position: absolute;
+                width: 140px;
+                height:140px;
+                background-color: #e3f2fd;
+                border-radius: 1px;
+                left: 22%;
+                top: 22%;
+                animation: ani 3s infinite;
+                animation-delay: 0.5s;
+            }
+            span:nth-child(6){
+                position:absolute ;
+                width: 120px;
+                height: 120px;
+                background-color: #90caf9;
+                border-radius: 2px;
+                left: 26%;
+                top: 26%;
+                animation:ani 3s infinite;
+                animation-delay: 0.55s;
+            }
+            span:nth-child(7){
+                position: absolute;
+                width: 100px;
+                height: 100px;
+                background-color: #bbdefb;
+                border-radius: 2px;
+                left: 30%;
+                top: 30%;
+                animation: ani 3s infinite;
+                animation-delay : 0.6s;
+            }
+            span:nth-child(8){
+                position: absolute;
+                width: 80px;
+                height: 80px;
+                background-color: #90caf7;
+                border-radius: 2px;
+                left: 34%;
+                top: 34%;
+                animation: ani 2.8s infinite;
+                animation-delay : 0.61s;
+            }
+            span:nth-child(9){
+                position: absolute;
+                width: 60px;
+                height: 60px;
+                background-color: #e3f2ff;
+                border-radius: 2px;
+                left: 38%;
+                top: 38%;
+                animation: ani 2.8s infinite;
+                animation-delay : 0.62s;
+            }
+            span:nth-child(10){
+                position: absolute;
+                width: 40px;
+                height: 40px;
+                background-color: #90caf0;
+                border-radius: 2px;
+                left: 42%;
+                top: 42%;
+                animation: ani 2.8s infinite;
+                animation-delay : 0.63s;
+            }
+            span:nth-child(11){
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                background-color: #90c6f0;
+                border-radius: 3px;
+                left: 46%;
+                top: 46%;
+                animation: ani 2.8s infinite;
+                animation-delay : 0.64s;
+            }
+            span:nth-child(12){
+                position: absolute;
+                width: 10px;
+                height: 10px;
+                background-color: #90ccd0;
+                border-radius: 1px;
+                left: 48%;
+                top: 48%;
+                animation: ani 2.8s infinite;
+                animation-delay : 0.65s;
+            }
+
+            @keyframes ani {
+
+                0%{transition: 2s;
+                    transform: rotate(0deg);
+                }
+                25%{transition: 3s;
+                    transform: rotate(180deg);
+                }
+                50%{
+                    transition: 4s;
+                    transform: rotate(360deg);
+                }
+                100% {
+                    transition: 5s;
+                    transform: rotate(0deg );
+                }
+            }
+
+
+        </style>
+    </head>
+    <body>
+        <div class="center">
+            <span class="1"></span>
+            <span class="2"></span>
+            <span class="3"></span>
+            <span class="4"></span>
+            <span class="5"></span>
+            <span class="6"></span>
+            <span class="7"></span>
+            <span class="8"></span>
+            <span class="9"></span>
+            <span class="10"></span>
+            <span class="11"></span>
+            <span class="12"></span>
+        </div>
+    </body>
+</html>

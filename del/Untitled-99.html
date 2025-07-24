@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Data Manager</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: 100vh;
+    padding: 1rem;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+}
+
+.header p {
+    color: #64748b;
+    font-size: 1.1rem;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.card-header {
+    padding: 1.5rem 1.5rem 0 1.5rem;
+}
+
+.card-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.card-description {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.card-content {
+    padding: 1.5rem;
+}
+
+.controls-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.input-group {
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    width: 16px;
+    height: 16px;
+}
+
+input, select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: white;
+    transition: all 0.2s;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.search-input {
+    padding-left: 2.5rem;
+}
+
+.button-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn {
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: white;
+    color: #374151;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.btn:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+}
+
+.btn-primary {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+}
+
+.btn-primary:hover {
+    background: #2563eb;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background: white;
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    z-index: 1;
+    border: 1px solid #e5e7eb;
+    top: 100%;
+    left: 0;
+    margin-top: 4px;
+}
+
+.dropdown-content.show {
+    display: block;
+}
+
+.dropdown-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+    background: #f3f4f6;
+}
+
+.stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.stats strong {
+    color: #1e293b;
+}
+
+.table-container {
+    overflow-x: auto;
+    border-radius: 12px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+th {
+    background: rgba(248, 250, 252, 0.8);
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: #374151;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+th:hover {
+    background: #f1f5f9;
+}
+
+th .sort-header {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+td {
+    padding: 1rem;
+    border-bottom: 1px solid #f1f5f9;
+    color: #374151;
+}
+
+tr:hover {
+    background: rgba(248, 250, 252, 0.5);
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.badge-secondary {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.badge-success {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.badge-danger {
+    background: #fecaca;
+    color: #dc2626;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    background: rgba(248, 250, 252, 0.5);
+}
+
+.pagination-info {
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.pagination-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.page-btn {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    background: white;
+    color: #374151;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+    background: #f9fafb;
+}
+
+.page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.page-btn.active {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+}
+
+.icon {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    .controls-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .button-group {
+        flex-direction: column;
+    }
+    
+    .stats {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .pagination {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .pagination-buttons {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Employee Data Manager</h1>
+            <p>Manage, filter, and export your employee data with ease</p>
+        </div>
+
+        <!-- Controls Card -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h8v-2h-8V9h8V7h-8V5h8V3h-8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8v-2h-8z"/>
+                    </svg>
+                    Filters & Actions
+                </div>
+                <div class="card-description">Search, filter, and export your data</div>
+            </div>
+            <div class="card-content">
+                <!-- Search and Filters Form -->
+                <form id="filterForm" class="controls-grid">
+                    <div class="input-group">
+                        <svg class="search-icon" viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        <input type="text" name="search" id="searchInput" class="search-input" 
+                               placeholder="Search employees..." value="<%= filters.search %>">
+                    </div>
+
+                    <select name="department" id="departmentFilter">
+                        <option value="all" <%= filters.department === 'all' ? 'selected' : '' %>>All Departments</option>
+                        <% departments.forEach(dept => { %>
+                            <option value="<%= dept %>" <%= filters.department === dept ? 'selected' : '' %>><%= dept %></option>
+                        <% }); %>
+                    </select>
+
+                    <select name="status" id="statusFilter">
+                        <option value="all" <%= filters.status === 'all' ? 'selected' : '' %>>All Statuses</option>
+                        <% statuses.forEach(status => { %>
+                            <option value="<%= status %>" <%= filters.status === status ? 'selected' : '' %>><%= status %></option>
+                        <% }); %>
+                    </select>
+
+                    <div class="button-group">
+                        <div class="dropdown">
+                            <button type="button" class="btn" id="exportBtn">
+                                <svg class="icon" viewBox="0 0 24 24">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7,10 12,15 17,10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                Export
+                            </button>
+                            <div class="dropdown-content" id="exportDropdown">
+                                <div class="dropdown-item" onclick="exportData('csv')">
+                                    <svg class="icon" viewBox="0 0 24 24">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14,2 14,8 20,8"/>
+                                        <line x1="16" y1="13" x2="8" y2="13"/>
+                                        <line x1="16" y1="17" x2="8" y2="17"/>
+                                        <polyline points="10,9 9,9 8,9"/>
+                                    </svg>
+                                    Download CSV
+                                </div>
+                                <div class="dropdown-item" onclick="exportData('json')">
+                                    <svg class="icon" viewBox="0 0 24 24">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14,2 14,8 20,8"/>
+                                        <line x1="16" y1="13" x2="8" y2="13"/>
+                                        <line x1="16" y1="17" x2="8" y2="17"/>
+                                        <polyline points="10,9 9,9 8,9"/>
+                                    </svg>
+                                    Download JSON
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn" onclick="printTable()">
+                            <svg class="icon" viewBox="0 0 24 24">
+                                <polyline points="6,9 6,2 18,2 18,9"/>
+                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                                <rect x="6" y="14" width="12" height="8"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <input type="hidden" name="sortField" value="<%= sort.sortField %>">
+                    <input type="hidden" name="sortDirection" value="<%= sort.sortDirection %>">
+                    <input type="hidden" name="page" value="1">
+                </form>
+
+                <!-- Stats -->
+                <div class="stats" id="stats">
+                    <span>Total: <strong><%= stats.total %></strong> employees</span>
+                    <span>Filtered: <strong><%= stats.filtered %></strong> results</span>
+                    <span>Active: <strong><%= stats.active %></strong></span>
+                    <span>Departments: <strong><%= stats.departmentCount %></strong></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table Card -->
+        <div class="card">
+            <div class="table-container">
+                <table id="dataTable">
+                    <thead>
+                        <tr>
+                            <% const columns = [
+                                { key: 'id', label: 'ID' },
+                                { key: 'name', label: 'Name' },
+                                { key: 'email', label: 'Email' },
+                                { key: 'role', label: 'Role' },
+                                { key: 'department', label: 'Department' },
+                                { key: 'salary', label: 'Salary' },
+                                { key: 'status', label: 'Status' },
+                                { key: 'joinDate', label: 'Join Date' }
+                            ]; %>
+                            <% columns.forEach(col => { %>
+                                <th onclick="handleSort('<%= col.key %>')" style="cursor: pointer;">
+                                    <div class="sort-header">
+                                        <%= col.label %>
+                                        <% if (sort.sortField === col.key) { %>
+                                            <span><%= sort.sortDirection === 'asc' ? '↑' : '↓' %></span>
+                                        <% } %>
+                                    </div>
+                                </th>
+                            <% }); %>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <% data.forEach(row => { %>
+                            <tr>
+                                <td style="font-weight: 500;"><%= row.id %></td>
+                                <td style="font-weight: 500;"><%= row.name %></td>
+                                <td style="color: #64748b;"><%= row.email %></td>
+                                <td><span class="badge badge-secondary"><%= row.role %></span></td>
+                                <td><%= row.department %></td>
+                                <td style="font-family: monospace;">$<%= row.salary.toLocaleString() %></td>
+                                <td>
+                                    <span class="badge <%= row.status === 'Active' ? 'badge-success' : 'badge-danger' %>">
+                                        <%= row.status %>
+                                    </span>
+                                </td>
+                                <td style="color: #64748b;"><%= row.joinDate %></td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <% if (pagination.totalPages > 1) { %>
+                <div class="pagination">
+                    <div class="pagination-info">
+                        Showing <%= pagination.startIndex %> to <%= pagination.endIndex %> of <%= pagination.totalItems %> results
+                    </div>
+                    <div class="pagination-buttons">
+                        <button class="page-btn" onclick="changePage(<%= pagination.currentPage - 1 %>)" 
+                                <%= pagination.currentPage === 1 ? 'disabled' : '' %>>
+                            Previous
+                        </button>
+
+                        <% for (let i = 1; i <= pagination.totalPages; i++) { %>
+                            <button class="page-btn <%= pagination.currentPage === i ? 'active' : '' %>" 
+                                    onclick="changePage(<%= i %>)">
+                                <%= i %>
+                            </button>
+                        <% } %>
+
+                        <button class="page-btn" onclick="changePage(<%= pagination.currentPage + 1 %>)" 
+                                <%= pagination.currentPage === pagination.totalPages ? 'disabled' : '' %>>
+                            Next
+                        </button>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+let currentFilters = {
+    search: '',
+    department: 'all',
+    status: 'all',
+    sortField: 'name',
+    sortDirection: 'asc',
+    page: 1
+};
+
+// Initialize the application
+document.addEventListener('DOMContentLoaded', function() {
+    setupEventListeners();
+    updateFiltersFromForm();
+});
+
+// Setup event listeners
+function setupEventListeners() {
+    // Search input with debounce
+    let searchTimeout;
+    document.getElementById('searchInput').addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            updateFilters();
+        }, 300);
+    });
+
+    // Filter dropdowns
+    document.getElementById('departmentFilter').addEventListener('change', updateFilters);
+    document.getElementById('statusFilter').addEventListener('change', updateFilters);
+    
+    // Export dropdown toggle
+    document.getElementById('exportBtn').addEventListener('click', function(e) {
+        e.stopPropagation();
+        const dropdown = document.getElementById('exportDropdown');
+        dropdown.classList.toggle('show');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function() {
+        const dropdown = document.getElementById('exportDropdown');
+        dropdown.classList.remove('show');
+    });
+}
+
+// Update filters from form values
+function updateFiltersFromForm() {
+    const form = document.getElementById('filterForm');
+    const formData = new FormData(form);
+    
+    currentFilters = {
+        search: formData.get('search') || '',
+        department: formData.get('department') || 'all',
+        status: formData.get('status') || 'all',
+        sortField: formData.get('sortField') || 'name',
+        sortDirection: formData.get('sortDirection') || 'asc',
+        page: parseInt(formData.get('page')) || 1
+    };
+}
+
+// Update filters and reload data
+function updateFilters() {
+    updateFiltersFromForm();
+    currentFilters.page = 1; // Reset to first page
+    loadData();
+}
+
+// Handle sort
+function handleSort(field) {
+    if (currentFilters.sortField === field) {
+        currentFilters.sortDirection = currentFilters.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+        currentFilters.sortField = field;
+        currentFilters.sortDirection = 'asc';
+    }
+    
+    // Update hidden form fields
+    document.querySelector('input[name="sortField"]').value = currentFilters.sortField;
+    document.querySelector('input[name="sortDirection"]').value = currentFilters.sortDirection;
+    
+    loadData();
+}
+
+// Change page
+function changePage(page) {
+    currentFilters.page = page;
+    document.querySelector('input[name="page"]').value = page;
+    loadData();
+}
+
+// Load data via AJAX
+async function loadData() {
+    try {
+        const params = new URLSearchParams(currentFilters);
+        const response = await fetch(`/api/data?${params}`);
+        const result = await response.json();
+        
+        updateTable(result.data);
+        updatePagination(result.pagination);
+        updateStats(result.stats);
+        
+    } catch (error) {
+        console.error('Error loading data:', error);
+    }
+}
+
+// Update table content
+function updateTable(data) {
+    const tableBody = document.getElementById('tableBody');
+    tableBody.innerHTML = '';
+
+    data.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td style="font-weight: 500;">${row.id}</td>
+            <td style="font-weight: 500;">${row.name}</td>
+            <td style="color: #64748b;">${row.email}</td>
+            <td><span class="badge badge-secondary">${row.role}</span></td>
+            <td>${row.department}</td>
+            <td style="font-family: monospace;">$${row.salary.toLocaleString()}</td>
+            <td><span class="badge ${row.status === 'Active' ? 'badge-success' : 'badge-danger'}">${row.status}</span></td>
+            <td style="color: #64748b;">${row.joinDate}</td>
+        `;
+        tableBody.appendChild(tr);
+    });
+}
+
+// Update pagination
+function updatePagination(pagination) {
+    const paginationDiv = document.querySelector('.pagination');
+    if (!paginationDiv) return;
+
+    const paginationInfo = paginationDiv.querySelector('.pagination-info');
+    const paginationButtons = paginationDiv.querySelector('.pagination-buttons');
+
+    paginationInfo.textContent = `Showing ${pagination.startIndex} to ${pagination.endIndex} of ${pagination.totalItems} results`;
+
+    paginationButtons.innerHTML = '';
+
+    if (pagination.totalPages > 1) {
+        // Previous button
+        const prevBtn = document.createElement('button');
+        prevBtn.className = 'page-btn';
+        prevBtn.textContent = 'Previous';
+        prevBtn.disabled = pagination.currentPage === 1;
+        prevBtn.onclick = () => changePage(pagination.currentPage - 1);
+        paginationButtons.appendChild(prevBtn);
+
+        // Page numbers
+        for (let i = 1; i <= pagination.totalPages; i++) {
+            const pageBtn = document.createElement('button');
+            pageBtn.className = `page-btn ${pagination.currentPage === i ? 'active' : ''}`;
+            pageBtn.textContent = i;
+            pageBtn.onclick = () => changePage(i);
+            paginationButtons.appendChild(pageBtn);
+        }
+
+        // Next button
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'page-btn';
+        nextBtn.textContent = 'Next';
+        nextBtn.disabled = pagination.currentPage === pagination.totalPages;
+        nextBtn.onclick = () => changePage(pagination.currentPage + 1);
+        paginationButtons.appendChild(nextBtn);
+    }
+}
+
+// Update stats
+function updateStats(stats) {
+    document.getElementById('stats').innerHTML = `
+        <span>Total: <strong>${stats.total}</strong> employees</span>
+        <span>Filtered: <strong>${stats.filtered}</strong> results</span>
+        <span>Active: <strong>${stats.active}</strong></span>
+        <span>Departments: <strong>${stats.departmentCount}</strong></span>
+    `;
+}
+
+// Export data
+function exportData(format) {
+    const params = new URLSearchParams({
+        search: currentFilters.search,
+        department: currentFilters.department,
+        status: currentFilters.status,
+        sortField: currentFilters.sortField,
+        sortDirection: currentFilters.sortDirection
+    });
+    
+    window.open(`/export/${format}?${params}`, '_blank');
+}
+
+// Print table
+function printTable() {
+    // Get current filtered data for printing
+    fetch(`/api/data?${new URLSearchParams(currentFilters)}`)
+        .then(response => response.json())
+        .then(result => {
+            const printContent = `
+                <!DOCTYPE html>
+                <html>
+                    <head>
+                        <title>Employee Data Report</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; margin: 20px; }
+                            h1 { color: #333; text-align: center; margin-bottom: 30px; }
+                            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                            th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+                            th { background-color: #f5f5f5; font-weight: bold; }
+                            tr:nth-child(even) { background-color: #f9f9f9; }
+                            .status-active { color: #16a34a; font-weight: bold; }
+                            .status-inactive { color: #dc2626; font-weight: bold; }
+                            .print-date { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>Employee Data Report</h1>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Department</th>
+                                    <th>Salary</th>
+                                    <th>Status</th>
+                                    <th>Join Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${result.data.map(row => `
+                                    <tr>
+                                        <td>${row.id}</td>
+                                        <td>${row.name}</td>
+                                        <td>${row.email}</td>
+                                        <td>${row.role}</td>
+                                        <td>${row.department}</td>
+                                        <td>$${row.salary.toLocaleString()}</td>
+                                        <td class="status-${row.status.toLowerCase()}">${row.status}</td>
+                                        <td>${row.joinDate}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                        <div class="print-date">
+                            Generated on: ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}
+                        </div>
+                    </body>
+                </html>
+            `;
+
+            const printWindow = window.open('', '_blank');
+            if (printWindow) {
+                printWindow.document.write(printContent);
+                printWindow.document.close();
+                printWindow.focus();
+                setTimeout(() => {
+                    printWindow.print();
+                    printWindow.close();
+                }, 250);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching data for print:', error);
+        });
+}
+    </script>
+</body>
+</html>

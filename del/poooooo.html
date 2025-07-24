@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Table Exporter</title>
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <!-- Required libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --secondary: #1d4ed8;
+      --success: #10b981;
+      --danger: #ef4444;
+      --accent: #f59e42;
+      --bg: #f8fafc;
+      --text: #1e293b;
+      --border: #e2e8f0;
+      --radius: 1.2rem;
+      --shadow: 0 4px 32px 0 rgba(37, 99, 235, 0.10);
+      --card-shadow: 0 2px 12px 0 rgba(37, 99, 235, 0.10);
+      --card-hover: #f1f5ff;
+      --card-selected: #e0e7ff;
+      --scrollbar-thumb: #2563eb;
+      --scrollbar-track: #e0e7ff;
+      --scrollbar-thumb-hover: #1d4ed8;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+    .container {
+      max-width: 700px;
+      margin: 3rem auto 2rem auto;
+      padding: 2.5rem 2rem 2rem 2rem;
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      position: relative;
+      animation: fadeIn 0.7s cubic-bezier(0.4, 1.4, 0.6, 1) both;
+      width: 100%;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(30px) scale(0.97);}
+      100% { opacity: 1; transform: none;}
+    }
+    h1 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 2rem;
+      font-size: 2.3rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .table-container {
+      overflow-x: auto;
+      margin-bottom: 2rem;
+      border-radius: 1rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 8px 0 rgba(37,99,235,0.06);
+      background: #f9fafb;
+      max-height: 350px;
+      /* Custom scrollbar for table */
+      scrollbar-width: thin;
+      scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    }
+    .table-container::-webkit-scrollbar {
+      height: 10px;
+      background: var(--scrollbar-track);
+      border-radius: 8px;
+    }
+    .table-container::-webkit-scrollbar-thumb {
+      background: linear-gradient(90deg, var(--scrollbar-thumb), var(--accent));
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+    .table-container::-webkit-scrollbar-thumb:hover {
+      background: var(--scrollbar-thumb-hover);
+    }
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      min-width: 500px;
+      background: transparent;
+    }
+    th, td {
+      padding: 0.85rem 1.2rem;
+      font-size: 1.03rem;
+      text-align: left;
+    }
+    th {
+      background: linear-gradient(90deg, var(--primary) 60%, var(--secondary) 100%);
+      color: #fff;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-bottom: 2px solid var(--secondary);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    tr:nth-child(even) td {
+      background: #f3f6fd;
+    }
+    tr:hover td {
+      background: var(--accent);
+      color: #fff;
+      transition: background 0.18s, color 0.18s;
+    }
+    .export-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      justify-content: center;
+      align-items: center;
+      margin-top: 2rem;
+    }
+
+    /* Card/Grid Selector */
+    .format-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1.1rem;
+      width: 100%;
+      max-width: 540px;
+      margin: 0 auto;
+    }
+    .format-card {
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: 1rem;
+      box-shadow: var(--card-shadow);
+      padding: 1.2rem 0.7rem 1rem 0.7rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: border 0.18s, box-shadow 0.18s, background 0.18s, color 0.18s;
+      font-size: 1.07rem;
+      font-weight: 600;
+      color: var(--primary);
+      outline: none;
+      user-select: none;
+      position: relative;
+      min-height: 110px;
+    }
+    .format-card.selected, .format-card:focus {
+      border-color: var(--primary);
+      background: var(--card-selected);
+      color: var(--primary);
+      box-shadow: 0 4px 16px 0 rgba(37, 99, 235, 0.13);
+    }
+    .format-card:hover {
+      background: var(--card-hover);
+      color: var(--secondary);
+      border-color: var(--accent);
+    }
+    .format-card i {
+      font-size: 2.1rem;
+      margin-bottom: 0.6rem;
+      color: inherit;
+      transition: color 0.18s;
+    }
+    .format-card .format-desc {
+      font-size: 0.98rem;
+      font-weight: 400;
+      color: #64748b;
+      margin-top: 0.2rem;
+      text-align: center;
+    }
+    .export-btn {
+      padding: 1rem 2.2rem;
+      background: linear-gradient(90deg, var(--success) 60%, #22d3ee 100%);
+      color: #fff;
+      border: none;
+      border-radius: 0.9rem;
+      font-weight: 700;
+      font-size: 1.13rem;
+      cursor: pointer;
+      box-shadow: 0 2px 8px 0 rgba(16,185,129,0.10);
+      transition: background 0.18s, box-shadow 0.18s, transform 0.12s;
+      margin-top: 0.5rem;
+      width: 100%;
+      max-width: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+    }
+    .export-btn:focus {
+      outline: 2px solid var(--accent);
+    }
+    .export-btn:active {
+      background: var(--success);
+    }
+    .export-btn[disabled] {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    /* Responsive */
+    @media (max-width: 600px) {
+      .container {
+        padding: 1rem 0.2rem;
+      }
+      .table-container {
+        border-radius: 0.3rem;
+        max-height: 220px;
+      }
+      th, td {
+        padding: 0.6rem 0.6rem;
+        font-size: 0.96rem;
+      }
+      .export-controls {
+        gap: 1rem;
+      }
+      .format-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.7rem;
+      }
+      .export-btn {
+        font-size: 1rem;
+        padding: 0.8rem 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>
+      <i class="fas fa-table"></i> Table Exporter
+    </h1>
+    <div class="table-container">
+      <table id="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Department</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>John Doe</td>
+            <td>john@example.com</td>
+            <td>Marketing</td>
+            <td>Active</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Jane Smith</td>
+            <td>jane@example.com</td>
+            <td>Development</td>
+            <td>Active</td>
+          </tr>
+          <!-- Add more rows as needed -->
+        </tbody>
+      </table>
+    </div>
+    <div class="export-controls">
+      <div class="format-grid" id="format-grid">
+        <div class="format-card" tabindex="0" data-format="csv">
+          <i class="fas fa-file-csv"></i>
+          CSV
+          <div class="format-desc">Spreadsheet</div>
+        </div>
+        <div class="format-card" tabindex="0" data-format="excel">
+          <i class="fas fa-file-excel"></i>
+          Excel
+          <div class="format-desc">.xlsx</div>
+        </div>
+        <div class="format-card" tabindex="0" data-format="ods">
+          <i class="fas fa-file-excel"></i>
+          ODS
+          <div class="format-desc">OpenSheet</div>
+        </div>
+        <div class="format-card" tabindex="0" data-format="pdf">
+          <i class="fas fa-file-pdf"></i>
+          PDF
+          <div class="format-desc">Document</div>
+        </div>
+        <div class="format-card" tabindex="0" data-format="txt">
+          <i class="fas fa-file-alt"></i>
+          TXT
+          <div class="format-desc">Text File</div>
+        </div>
+        <div class="format-card" tabindex="0" data-format="odt">
+          <i class="fas fa-file-word"></i>
+          ODT
+          <div class="format-desc">OpenDoc</div>
+        </div>
+      </div>
+      <button class="export-btn" id="export-btn" disabled>
+        <i class="fas fa-download"></i> Export Table
+      </button>
+    </div>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const table = document.getElementById("data-table");
+      const exportBtn = document.getElementById("export-btn");
+      const cards = Array.from(document.querySelectorAll('.format-card'));
+      let selectedFormat = "";
+
+      // Card selection logic
+      cards.forEach((card, idx) => {
+        card.addEventListener('click', function () {
+          cards.forEach(c => c.classList.remove('selected'));
+          this.classList.add('selected');
+          selectedFormat = this.dataset.format;
+          exportBtn.disabled = false;
+        });
+        card.addEventListener('keydown', function (e) {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            this.click();
+          }
+          // Optional: arrow key navigation
+          if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+            e.preventDefault();
+            cards[(idx + 1) % cards.length].focus();
+          }
+          if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+            e.preventDefault();
+            cards[(idx - 1 + cards.length) % cards.length].focus();
+          }
+        });
+      });
+
+      exportBtn.addEventListener("click", function () {
+        if (!selectedFormat) {
+          alert("Please select a format first");
+          return;
+        }
+        switch (selectedFormat) {
+          case "csv": exportToCSV(); break;
+          case "excel": exportToExcel(); break;
+          case "ods": exportToODS(); break;
+          case "pdf": exportToPDF(); break;
+          case "txt": exportToTXT(); break;
+          case "odt": exportToODT(); break;
+        }
+      });
+
+      // Helper: get table data as array of objects
+      function getTableData() {
+        const headers = Array.from(table.querySelectorAll("thead th")).map(
+          (th) => th.textContent.trim()
+        );
+        return Array.from(table.querySelectorAll("tbody tr")).map((tr) => {
+          const cells = Array.from(tr.querySelectorAll("td"));
+          const obj = {};
+          headers.forEach(
+            (h, i) => (obj[h] = cells[i] ? cells[i].textContent.trim() : "")
+          );
+          return obj;
+        });
+      }
+      // Helper: get table as 2D array
+      function getTableArray() {
+        const rows = [];
+        rows.push(
+          Array.from(table.querySelectorAll("thead th")).map((th) =>
+            th.textContent.trim()
+          )
+        );
+        Array.from(table.querySelectorAll("tbody tr")).forEach((tr) => {
+          rows.push(
+            Array.from(tr.querySelectorAll("td")).map((td) =>
+              td.textContent.trim()
+            )
+          );
+        });
+        return rows;
+      }
+
+      // CSV
+      function exportToCSV() {
+        const rows = getTableArray();
+        const csv = rows
+          .map((row) =>
+            row.map((cell) => `"${cell.replace(/"/g, '""')}"`).join(",")
+          )
+          .join("\r\n");
+        downloadFile(csv, "table-data.csv", "text/csv");
+      }
+      // Excel (XLSX)
+      function exportToExcel() {
+        const ws = XLSX.utils.aoa_to_sheet(getTableArray());
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        XLSX.writeFile(wb, "table-data.xlsx");
+      }
+      // ODS (OpenDocument Spreadsheet)
+      function exportToODS() {
+        const ws = XLSX.utils.aoa_to_sheet(getTableArray());
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        XLSX.writeFile(wb, "table-data.ods");
+      }
+      // PDF
+      function exportToPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.autoTable({
+          head: [getTableArray()[0]],
+          body: getTableArray().slice(1),
+        });
+        doc.save("table-data.pdf");
+      }
+      // TXT
+      function exportToTXT() {
+        const rows = getTableArray();
+        const txt = rows.map((row) => row.join("\t")).join("\r\n");
+        downloadFile(txt, "table-data.txt", "text/plain");
+      }
+      // ODT (OpenDocument Text)
+      function exportToODT() {
+        // ODT is a zipped XML format; for demo, export as flat XML
+        const data = getTableData();
+        let odt = '<?xml version="1.0" encoding="UTF-8"?><table>';
+        data.forEach((row) => {
+          odt += "<tr>";
+          for (const key in row) {
+            odt += `<td>${escapeXML(row[key])}</td>`;
+          }
+          odt += "</tr>";
+        });
+        odt += "</table>";
+        downloadFile(
+          odt,
+          "table-data.odt",
+          "application/vnd.oasis.opendocument.text"
+        );
+      }
+      function escapeXML(str) {
+        return str.replace(
+          /[<>&'"]/g,
+          (c) =>
+            ({
+              "<": "&lt;",
+              ">": "&gt;",
+              "&": "&amp;",
+              "'": "&apos;",
+              '"': "&quot;",
+            }[c])
+        );
+      }
+      // Download helper
+      function downloadFile(content, fileName, mimeType) {
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+    });
+  </script>
+</body>
+</html>

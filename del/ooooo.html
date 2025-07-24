@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Table Export & Print</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- jsPDF & AutoTable -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <!-- SheetJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --primary: #3478f6;
+            --accent: #ff6f61;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #273142;
+            --border: #d1d5db;
+            --hover: #e2e8f0;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 1rem;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: var(--card);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        header {
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+            letter-spacing: -0.5px;
+        }
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: var(--hover);
+            border-bottom: 1px solid var(--border);
+        }
+        .toolbar button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 0.9rem;
+        }
+        .toolbar button:hover {
+            background: var(--accent);
+        }
+        .table-container {
+            overflow-x: auto;
+            padding: 1rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        th, td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+        th {
+            background: var(--primary);
+            color: #fff;
+            position: sticky;
+            top: 0;
+        }
+        tr:nth-child(even) {
+            background: #fafafa;
+        }
+        tr:hover {
+            background: var(--hover);
+        }
+        @media print {
+            .toolbar, header { display: none; }
+            body { padding: 0; }
+            .container { box-shadow: none; margin: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Enhanced Data Export & Print</h1>
+        </header>
+        <div class="toolbar">
+            <button id="export-csv"><i class="fas fa-file-csv"></i>CSV</button>
+            <button id="export-xlsx"><i class="fas fa-file-excel"></i>Excel</button>
+            <button id="export-pdf"><i class="fas fa-file-pdf"></i>PDF</button>
+            <button id="export-json"><i class="fas fa-code"></i>JSON</button>
+            <button id="print-table"><i class="fas fa-print"></i>Print</button>
+        </div>
+        <div class="table-container">
+            <table id="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th><th>Name</th><th>Email</th><th>Department</th><th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td>John Doe</td><td>john@example.com</td><td>Marketing</td><td>Active</td></tr>
+                    <tr><td>2</td><td>Jane Smith</td><td>jane@example.com</td><td>Development</td><td>Active</td></tr>
+                    <!-- More rows -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const table = document.getElementById('data-table');
+
+        // Helper to get array of arrays
+        const getTableArray = () => {
+            const rows = [];
+            rows.push(Array.from(table.tHead.rows[0].cells).map(c => c.textContent));
+            Array.from(table.tBodies[0].rows).forEach(r => rows.push(Array.from(r.cells).map(c => c.textContent)));
+            return rows;
+        };
+
+        const download = (content, name, type) => {
+            const blob = new Blob([content], { type });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = name;
+            a.click();
+            URL.revokeObjectURL(a.href);
+        };
+
+        document.getElementById('export-csv').onclick = () => {
+            const csv = getTableArray().map(r => r.map(c => '"'+c.replace(/"/g,'""')+'"').join(',')).join('\r\n');
+            download(csv, 'data.csv', 'text/csv');
+        };
+
+        document.getElementById('export-xlsx').onclick = () => {
+            const ws = XLSX.utils.aoa_to_sheet(getTableArray());
+            const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+            XLSX.writeFile(wb, 'data.xlsx');
+        };
+
+        document.getElementById('export-pdf').onclick = () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+            doc.autoTable({ head: [getTableArray()[0]], body: getTableArray().slice(1) });
+            doc.save('data.pdf');
+        };
+
+        document.getElementById('export-json').onclick = () => {
+            const json = JSON.stringify(
+                Array.from(table.tBodies[0].rows).map(r => {
+                    return Array.from(r.cells).reduce((o,c,i) => {
+                        o[getTableArray()[0][i]] = c.textContent; return o;
+                    }, {});
+                }), null, 2);
+            download(json, 'data.json', 'application/json');
+        };
+
+        document.getElementById('print-table').onclick = () => window.print();
+    });
+    </script>
+</body>
+</html>

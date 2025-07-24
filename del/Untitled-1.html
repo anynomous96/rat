@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Table Export App</title>
+    <link rel="stylesheet" href="styles/table.css" />
+    <style>
+      body {
+        background: linear-gradient(120deg, #f0f4f8 0%, #e0e7ef 100%);
+        font-family: "Segoe UI", Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 900px;
+        margin: 40px auto;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(60, 72, 88, 0.15);
+        padding: 32px 24px;
+      }
+      h1 {
+        text-align: center;
+        color: #2d3a4b;
+        margin-bottom: 24px;
+        letter-spacing: 1px;
+      }
+      .table-container {
+        width: 100%;
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin: 20px 0;
+        font-size: 1.08em;
+        background: #f9fbfc;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.07);
+      }
+      th,
+      td {
+        padding: 14px 18px;
+        text-align: left;
+        border-bottom: 1px solid #e3e8ee;
+        transition: background 0.2s;
+      }
+      th {
+        background: #e3e8ee;
+        color: #2d3a4b;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      tr:hover td {
+        background: #f1f7fa;
+      }
+      .button {
+        background: linear-gradient(90deg, #4caf50 0%, #43a047 100%);
+        color: white;
+        padding: 12px 22px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        margin: 10px 8px 0 0;
+        font-size: 1em;
+        font-weight: 500;
+        box-shadow: 0 2px 8px rgba(76, 175, 80, 0.08);
+        transition: background 0.2s, box-shadow 0.2s;
+      }
+      .button:hover {
+        background: linear-gradient(90deg, #43a047 0%, #388e3c 100%);
+        box-shadow: 0 4px 16px rgba(76, 175, 80, 0.15);
+      }
+      @media (max-width: 600px) {
+        .container {
+          padding: 12px 2px;
+        }
+        table,
+        th,
+        td {
+          font-size: 0.98em;
+        }
+      }
+    </style>
+    <!-- jsPDF and autoTable for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <!-- SheetJS for Excel export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Employee Data Table</h1>
+      <div class="table-container">
+        <table id="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Age</th>
+              <th>Email</th>
+              <th>Department</th>
+              <th>Country</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Alice Johnson</td>
+              <td>29</td>
+              <td>alice.johnson@example.com</td>
+              <td>Engineering</td>
+              <td>USA</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Mohammed Ali</td>
+              <td>34</td>
+              <td>mohammed.ali@example.com</td>
+              <td>Marketing</td>
+              <td>UAE</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Priya Singh</td>
+              <td>27</td>
+              <td>priya.singh@example.com</td>
+              <td>Finance</td>
+              <td>India</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>Lucas Wang</td>
+              <td>31</td>
+              <td>lucas.wang@example.com</td>
+              <td>Design</td>
+              <td>China</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>Sophia Müller</td>
+              <td>25</td>
+              <td>sophia.muller@example.com</td>
+              <td>HR</td>
+              <td>Germany</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <button class="button" id="export-csv">Export as CSV</button>
+      <button class="button" id="export-pdf">Export as PDF</button>
+      <button class="button" id="export-excel">Export as Excel</button>
+    </div>
+    <!-- ...existing code... -->
+<button class="button" id="export-txt">Export as TXT</button>
+<button class="button" id="export-tsv">Export as TSV</button>
+<button class="button" id="export-json">Export as JSON</button>
+<button class="button" id="export-xml">Export as XML</button>
+<button class="button" id="export-html">Export as HTML</button>
+<button class="button" id="export-md">Export as Markdown</button>
+<button class="button" id="export-yaml">Export as YAML</button>
+<button class="button" id="export-rtf">Export as RTF</button>
+<button class="button" id="export-odt">Export as ODT</button>
+<button class="button" id="export-ods">Export as ODS</button>
+<button class="button" id="export-latex">Export as LaTeX</button>
+<button class="button" id="export-sql">Export as SQL</button>
+<!-- ...existing code... -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const table = document.getElementById("data-table");
+    // ...existing code...
+    document.getElementById("export-txt").addEventListener("click", exportTableToTXT);
+    document.getElementById("export-tsv").addEventListener("click", exportTableToTSV);
+    document.getElementById("export-json").addEventListener("click", exportTableToJSON);
+    document.getElementById("export-xml").addEventListener("click", exportTableToXML);
+    document.getElementById("export-html").addEventListener("click", exportTableToHTML);
+    document.getElementById("export-md").addEventListener("click", exportTableToMarkdown);
+    document.getElementById("export-yaml").addEventListener("click", exportTableToYAML);
+    document.getElementById("export-rtf").addEventListener("click", exportTableToRTF);
+    document.getElementById("export-odt").addEventListener("click", exportTableToODT);
+    document.getElementById("export-ods").addEventListener("click", exportTableToODS);
+    document.getElementById("export-latex").addEventListener("click", exportTableToLaTeX);
+    document.getElementById("export-sql").addEventListener("click", exportTableToSQL);
+
+    // --- TXT ---
+    function exportTableToTXT() {
+      let txt = "";
+      const rows = table.querySelectorAll("tr");
+      for (let row of rows) {
+        const cols = row.querySelectorAll("td, th");
+        let txtRow = [];
+        for (let col of cols) {
+          txtRow.push(col.innerText);
+        }
+        txt += txtRow.join(" ") + "\n";
+      }
+      downloadFile(txt, "table-data.txt", "text/plain");
+    }
+
+    // --- TSV ---
+    function exportTableToTSV() {
+      let tsv = [];
+      const rows = table.querySelectorAll("tr");
+      for (let row of rows) {
+        const cols = row.querySelectorAll("td, th");
+        let tsvRow = [];
+        for (let col of cols) {
+          tsvRow.push(col.innerText);
+        }
+        tsv.push(tsvRow.join("\t"));
+      }
+      downloadFile(tsv.join("\n"), "table-data.tsv", "text/tab-separated-values");
+    }
+
+    // --- JSON ---
+    function exportTableToJSON() {
+      const headers = Array.from(table.querySelectorAll("thead th")).map(th => th.innerText);
+      const rows = Array.from(table.querySelectorAll("tbody tr")).map(tr =>
+        Object.fromEntries(Array.from(tr.children).map((td, i) => [headers[i], td.innerText]))
+      );
+      downloadFile(JSON.stringify(rows, null, 2), "table-data.json", "application/json");
+    }
+
+    // --- XML ---
+    function exportTableToXML() {
+      const headers = Array.from(table.querySelectorAll("thead th")).map(th => th.innerText);
+      let xml = '<?xml version="1.0"?><rows>';
+      const rows = table.querySelectorAll("tbody tr");
+      for (let row of rows) {
+        xml += "<row>";
+        Array.from(row.children).forEach((td, i) => {
+          xml += `<${headers[i]}>${td.innerText}</${headers[i]}>`;
+        });
+        xml += "</row>";
+      }
+      xml += "</rows>";
+      downloadFile(xml, "table-data.xml", "application/xml");
+    }
+
+    // --- HTML ---
+    function exportTableToHTML() {
+      downloadFile(table.outerHTML, "table-data.html", "text/html");
+    }
+
+    // --- Markdown ---
+    function exportTableToMarkdown() {
+      const headers = Array.from(table.querySelectorAll("thead th")).map(th => th.innerText);
+      let md = "| " + headers.join(" | ") + " |\n";
+      md += "| " + headers.map(() => "---").join(" | ") + " |\n";
+      const rows = table.querySelectorAll("tbody tr");
+      for (let row of rows) {
+        const cols = Array.from(row.children).map(td => td.innerText);
+        md += "| " + cols.join(" | ") + " |\n";
+      }
+      downloadFile(md, "table-data.md", "text/markdown");
+    }
+
+    // --- YAML ---
+    function exportTableToYAML() {
+      const headers = Array.from(table.querySelectorAll("thead th")).map(th => th.innerText);
+      const rows = Array.from(table.querySelectorAll("tbody tr")).map(tr =>
+        Object.fromEntries(Array.from(tr.children).map((td, i) => [headers[i], td.innerText]))
+      );
+      let yaml = "";
+      rows.forEach(row => {
+        yaml += "-\n";
+        for (let key in row) {
+          yaml += `  ${key}: ${row[key]}\n`;
+        }
+      });
+      downloadFile(yaml, "table-data.yaml", "text/yaml");
+    }
+
+    // --- RTF ---
+    function exportTableToRTF() {
+      let rtf = "{\\rtf1\\ansi\n{\\b Table Data}\\par\n";
+      const rows = table.querySelectorAll("tr");
+      for (let row of rows) {
+        const cols = row.querySelectorAll("td, th");
+        let rtfRow = [];
+        for (let col of cols) {
+          rtfRow.push(col.innerText);
+        }
+        rtf += rtfRow.join("\\tab ") + "\\par\n";
+      }
+      rtf += "}";
+      downloadFile(rtf, "table-data.rtf", "application/rtf");
+    }
+
+    // --- ODT (simple text) ---
+    function exportTableToODT() {
+      // ODT is a complex format; here we use a simple text-based ODT
+      let content = "Table Data\n\n";
+      const rows = table.querySelectorAll("tr");
+      for (let row of rows) {
+        const cols = row.querySelectorAll("td, th");
+        let odtRow = [];
+        for (let col of cols) {
+          odtRow.push(col.innerText);
+        }
+        content += odtRow.join("\t") + "\n";
+      }
+      downloadFile(content, "table-data.odt", "application/vnd.oasis.opendocument.text");
+    }
+
+    // --- ODS (simple CSV) ---
+    function exportTableToODS() {
+      // ODS is a complex format; here we use a simple CSV with ODS mime type
+      let csv = [];
+      const rows = table.querySelectorAll("tr");
+      for (let row of rows) {
+        const cols = row.querySelectorAll("td, th");
+        let csvRow = [];
+        for (let col of cols) {
+          csvRow.push(col.innerText);
+        }
+        csv.push(csvRow.join(","));
+      }
+      downloadFile(csv.join("\n"), "table-data.ods", "application/vnd.oasis.opendocument.spreadsheet");
+    }
+
+    // --- LaTeX ---
+    function exportTableToLaTeX() {
+      const headers = Array.from(table.querySelectorAll("thead th")).map(th => th.innerText);
+      let latex = "\\begin{tabular}{" + "l".repeat(headers.length) + "}\n";
+      latex += headers.join(" & ") + " \\\\\n\\hline\n";
+      const rows = table.querySelectorAll("tbody tr");
+      for (let row of rows) {
+        const cols = Array.from(row.children).map(td => td.innerText);
+        latex += cols.join(" & ") + " \\\\\n";
+      }
+      latex += "\\end{tabular}";
+      downloadFile(latex, "table-data.tex", "application/x-latex");
+    }
+
+    // --- SQL ---
+    function exportTableToSQL() {
+      const headers = Array.from(table.querySelectorAll("thead th")).map(th => th.innerText);
+      let sql = "";
+      const rows = table.querySelectorAll("tbody tr");
+      for (let row of rows) {
+        const cols = Array.from(row.children).map(td => `'${td.innerText.replace(/'/g, "''")}'`);
+        sql += `INSERT INTO table_name (${headers.join(", ")}) VALUES (${cols.join(", ")});\n`;
+      }
+      downloadFile(sql, "table-data.sql", "application/sql");
+    }
+
+    // --- Helper function ---
+    function downloadFile(content, filename, mime) {
+      const blob = new Blob([content], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+    // ...existing code...
+  });
+</script>
+<!-- ...existing code... -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const table = document.getElementById("data-table");
+        document
+          .getElementById("export-csv")
+          .addEventListener("click", exportTableToCSV);
+        document
+          .getElementById("export-pdf")
+          .addEventListener("click", exportTableToPDF);
+        document
+          .getElementById("export-excel")
+          .addEventListener("click", exportTableToExcel);
+
+        function exportTableToCSV() {
+          let csv = [];
+          const rows = table.querySelectorAll("tr");
+          for (let row of rows) {
+            const cols = row.querySelectorAll("td, th");
+            const csvRow = [];
+            for (let col of cols) {
+              // Escape double quotes
+              let text = col.innerText.replace(/"/g, '""');
+              csvRow.push(`"${text}"`);
+            }
+            csv.push(csvRow.join(","));
+          }
+          const csvString = csv.join("\n");
+          const blob = new Blob([csvString], { type: "text/csv" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "table-data.csv";
+          a.click();
+          URL.revokeObjectURL(url);
+        }
+
+        function exportTableToPDF() {
+          const { jsPDF } = window.jspdf;
+          const pdf = new jsPDF();
+          const rows = [];
+          const tableRows = table.querySelectorAll("tr");
+          for (let row of tableRows) {
+            const cols = row.querySelectorAll("td, th");
+            const pdfRow = [];
+            for (let col of cols) {
+              pdfRow.push(col.innerText);
+            }
+            rows.push(pdfRow);
+          }
+          pdf.autoTable({
+            head: [rows[0]],
+            body: rows.slice(1),
+            theme: "grid",
+            styles: { fontSize: 10 },
+            headStyles: { fillColor: [76, 175, 80] },
+          });
+          pdf.save("table-data.pdf");
+        }
+
+        function exportTableToExcel() {
+          const wb = XLSX.utils.book_new();
+          const ws = XLSX.utils.table_to_sheet(table);
+          XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+          XLSX.writeFile(wb, "table-data.xlsx");
+        }
+      });
+    </script>
+  </body>
+</html>
