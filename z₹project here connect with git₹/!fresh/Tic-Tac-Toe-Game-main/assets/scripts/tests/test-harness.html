@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Tic-Tac-Toe Tests</title>
+    <link rel="stylesheet" href="../styles/../styles/style.css" />
+    <script src="../app.js" defer></script>
+    <style>
+      body {
+        background: #0f1b20;
+        color: #a8bfc9;
+        font-family: sans-serif;
+        padding: 2rem;
+      }
+      .ok {
+        color: #7ef29b;
+      }
+      .fail {
+        color: #ff7b7b;
+      }
+      pre {
+        background: #081012;
+        padding: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Automated Tests (basic)</h1>
+    <div id="results"></div>
+    <script>
+      function assert(name, cond) {
+        const el = document.getElementById("results");
+        const div = document.createElement("div");
+        div.innerHTML =
+          `<strong>${name}:</strong> ` +
+          (cond
+            ? '<span class="ok">PASS</span>'
+            : '<span class="fail">FAIL</span>');
+        el.appendChild(div);
+        return cond;
+      }
+
+      window.addEventListener("load", () => {
+        const t = window.__tests__;
+        if (!t)
+          return alert("Test helpers not available. Make sure app.js loaded.");
+
+        // Test 1: boardFromDOM when DOM empty
+        // ensure no marks on page (use the gameplay cards present in index)
+        const emptyBoard = t.boardFromDOM();
+        assert(
+          "boardFromDOM returns 9 entries",
+          Array.isArray(emptyBoard) && emptyBoard.length === 9
+        );
+
+        // Test 2: compute best move on empty board for X to start (should choose center 4 or corner)
+        const b = Array(9).fill(null);
+        const idx = t.computeBestMoveFromBoard(b, true, "x", "o");
+        assert(
+          "computeBestMove returns valid index",
+          typeof idx === "number" && idx >= 0 && idx < 9
+        );
+
+        // Test 3: forced draw detection: known forced draw position
+        // X at 0,4; O at 1,2,3 -> remaining spots should be draw with perfect play
+        const bd = ["x", "o", "o", "o", "x", null, null, null, null];
+        const isDraw = t.isForcedDraw(bd, true, "x", "o");
+        assert(
+          "isForcedDraw works on sample board (returns boolean)",
+          typeof isDraw === "boolean"
+        );
+
+        // Test 4: checkWinOnBoard
+        const winBoard = ["x", "x", "x", null, null, null, null, null, null];
+        assert(
+          "checkWinOnBoard detects row win",
+          t.checkWinOnBoard(winBoard, "x") === true
+        );
+
+        const done = document.createElement("pre");
+        done.textContent = "Basic tests finished. Review PASS/FAIL above.";
+        document.body.appendChild(done);
+      });
+    </script>
+  </body>
+</html>

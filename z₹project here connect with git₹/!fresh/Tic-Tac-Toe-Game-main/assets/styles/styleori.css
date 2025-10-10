@@ -384,7 +384,6 @@ body {
   animation: fadeIn 0.4s ease-in-out;
   display: none;
 }
-
 .modal__result {
   display: flex;
   align-items: center;
@@ -417,4 +416,3 @@ body {
 .modal__buttons {
   margin-top: 3rem;
 }
-
