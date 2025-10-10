@@ -1,3 +1,21 @@
+  (function () {
+        var scroll = new LocomotiveScroll();
+    })();
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
 const X_CLASS = "x";
 const O_CLASS = "o";
 const WINNING_COMBINATIONS = [
@@ -14,6 +32,11 @@ const WINNING_COMBINATIONS = [
 let currentPlayerMark = O_CLASS;
 let isVsPlayer = false;
 let oTurn = false;
+
+// Animation / autofill configuration
+const ANIM_DURATION = 220; // ms per placement animation
+const AUTO_THRESHOLD = 3; // trigger autofill when remaining empty cells <= this
+const AUTOFILL_PVP_ENABLED = true; // enable autofill during player-vs-player
 
 let xWin = 0;
 let oWin = 0;
@@ -77,30 +100,27 @@ function setScoreBoard() {
   const tieEl = document.getElementById("tie");
   const oWinEl = document.getElementById("o-win");
 
-  xWinEl.innerHTML = `${
-    isVsPlayer
+  xWinEl.innerHTML = `${isVsPlayer
       ? "X (P1)"
       : currentPlayerMark === O_CLASS
-      ? "X (CPU)"
-      : "X (You)"
-  } <span id="x-win-inner" class="gameplay__highlight">${xWin}</span>`;
+        ? "X (CPU)"
+        : "X (You)"
+    } <span id="x-win-inner" class="gameplay__highlight">${xWin}</span>`;
   tieEl.innerHTML = `Ties <span id="tie-inner" class="gameplay__highlight">${tie}</span>`;
-  oWinEl.innerHTML = `${
-    isVsPlayer
+  oWinEl.innerHTML = `${isVsPlayer
       ? "O (P2)"
       : currentPlayerMark === O_CLASS
-      ? "O (You)"
-      : "O (CPU)"
-  } <span id="o-win-inner" class="gameplay__highlight">${oWin}</span>`;
+        ? "O (You)"
+        : "O (CPU)"
+    } <span id="o-win-inner" class="gameplay__highlight">${oWin}</span>`;
 }
 
 function setTurn() {
   const turnEl = document.getElementById("gameplay-turn");
 
   turnEl.innerHTML = `<svg class="gameplay__turn-icon">
-<use xlink:href="./assets/images/SVG/icon-${
-    oTurn ? O_CLASS : X_CLASS
-  }-default.svg#icon-${oTurn ? O_CLASS : X_CLASS}-default"></use>
+<use xlink:href="./assets/images/SVG/icon-${oTurn ? O_CLASS : X_CLASS
+    }-default.svg#icon-${oTurn ? O_CLASS : X_CLASS}-default"></use>
 </svg> &nbsp; Turn`;
 }
 
@@ -238,7 +258,7 @@ function isForcedDraw(board, isCpuTurn, cpuMark, humanMark) {
   return result === 0;
 }
 
-function animatePlaceMark(cell, mark, duration = 220) {
+function animatePlaceMark(cell, mark, duration = ANIM_DURATION) {
   // small pop-in animation via inline styles
   try {
     cell.style.transition = `transform ${duration}ms ease, opacity ${duration}ms ease`;
@@ -282,7 +302,7 @@ async function getCpuChoice() {
   // Dynamically choose a short delay (faster overall)
   const baseDelay = emptyCount > 4 ? 600 : 320;
 
-  // If only 2-3 moves left and it's a forced draw, auto-complete the remainder with an animated fill
+  // If only a few moves left and it's a forced draw, auto-complete the remainder with an animated fill
   if (!isVsPlayer && emptyCount <= 4) {
     const board = boardFromDOM();
     const cpuTurnNow = oTurn === (cpuMark === O_CLASS);
@@ -304,9 +324,9 @@ async function getCpuChoice() {
         const { idx, mark } = sequence[i];
         await new Promise((resolve) => {
           setTimeout(() => {
-            animatePlaceMark(cells[idx], mark, 220);
+            animatePlaceMark(cells[idx], mark, ANIM_DURATION);
             resolve();
-          }, i * 300 + baseDelay);
+          }, i * (ANIM_DURATION + 80) + baseDelay);
         });
       }
 
@@ -317,7 +337,7 @@ async function getCpuChoice() {
         setGameLogic();
         // ensure a tie is declared if no winner
         if (!checkWin(currentClass) && isDraw()) endGame(true);
-      }, 260);
+      }, ANIM_DURATION + 40);
 
       return;
     }
@@ -368,6 +388,62 @@ function playHandler(event) {
   setGameLogic();
 
   if (!isVsPlayer && !checkWin(currentClass) && !isDraw()) getCpuChoice();
+
+  // PvP autofill: when enabled and only few moves left and forced draw, auto-complete for both players
+  if (isVsPlayer && AUTOFILL_PVP_ENABLED) {
+    // run asynchronously (do not block UI thread)
+    setTimeout(() => {
+      attemptAutofillPvP();
+    }, 40);
+  }
+}
+
+function attemptAutofillPvP() {
+  const emptyCells = getEmptyCells();
+  const emptyCount = emptyCells.length;
+  if (emptyCount === 0) return;
+  if (emptyCount > AUTO_THRESHOLD) return; // only trigger when near end
+
+  const board = boardFromDOM();
+  // For PvP, we treat the next-to-move as 'cpu' and check if the resulting outcome is forced draw
+  const cpuMark = oTurn ? O_CLASS : X_CLASS; // mark of player to move
+  const humanMark = cpuMark === X_CLASS ? O_CLASS : X_CLASS;
+  const cpuTurnNow = true; // we evaluate from the perspective of the player to move
+
+  if (!isForcedDraw(board, cpuTurnNow, cpuMark, humanMark)) return;
+
+  // compute sequence to draw
+  const sequence = [];
+  const simBoard = [...board];
+  let simCpuTurn = cpuTurnNow;
+  while (simBoard.some((c) => c === null)) {
+    const idx = computeBestMoveFromBoard(simBoard, simCpuTurn, cpuMark, humanMark);
+    if (idx == null) break;
+    sequence.push({ idx, mark: simCpuTurn ? cpuMark : humanMark });
+    simBoard[idx] = simCpuTurn ? cpuMark : humanMark;
+    simCpuTurn = !simCpuTurn;
+  }
+
+  // animate sequence sequentially
+  (async () => {
+    // remove click listeners temporarily
+    cells.forEach((cell) => cell.removeEventListener('click', playHandler));
+    changeDomLayout(opponentMessage, 'd-none', 'd-block');
+    for (let i = 0; i < sequence.length; i++) {
+      const { idx, mark } = sequence[i];
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          animatePlaceMark(cells[idx], mark, ANIM_DURATION);
+          resolve();
+        }, i * (ANIM_DURATION + 80));
+      });
+    }
+    changeDomLayout(opponentMessage, 'd-block', 'd-none');
+    setTimeout(() => {
+      setGameLogic();
+      if (!checkWin(currentClass) && isDraw()) endGame(true);
+    }, ANIM_DURATION + 40);
+  })();
 }
 
 function checkWin(currentClass) {
@@ -445,25 +521,22 @@ function setWinner() {
     changeDomLayout(modalEl, "d-none", "d-block");
   }, 500);
 
-  modalEl.innerHTML = `<h4 class="heading-xs">${
-    isVsPlayer
+  modalEl.innerHTML = `<h4 class="heading-xs">${isVsPlayer
       ? oTurn
         ? "Player 2 Win"
         : "Player 1 win"
       : oTurn && currentPlayerMark === "o"
-      ? "You won"
-      : !oTurn && currentPlayerMark === "x"
-      ? "You won"
-      : "oh No, you lost..."
-  }</h4>
+        ? "You won"
+        : !oTurn && currentPlayerMark === "x"
+          ? "You won"
+          : "oh No, you lost..."
+    }</h4>
 	<div class="modal__result">
 		<svg class="modal__icon">
-			<use xlink:href="./assets/images/SVG/icon-${
-        oTurn ? O_CLASS : X_CLASS
-      }.svg#icon-${oTurn ? O_CLASS : X_CLASS}"></use>
+			<use xlink:href="./assets/images/SVG/icon-${oTurn ? O_CLASS : X_CLASS
+    }.svg#icon-${oTurn ? O_CLASS : X_CLASS}"></use>
 		</svg>
-		<h1 class="heading-lg heading-lg--${
-      oTurn ? "yellow" : "blue"
+		<h1 class="heading-lg heading-lg--${oTurn ? "yellow" : "blue"
     }">takes the round</h1>
 	</div>
 

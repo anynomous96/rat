@@ -418,3 +418,110 @@ body {
   margin-top: 3rem;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /* body::-webkit-scrollbar {
+      background-color: transparent;
+      width: 6px;
+    }
+    body::-webkit-scrollbar-thumb {
+      background: linear-gradient(red, blue, green);
+      border-radius: 20px;
+    } */
+
+
+
+
+
+    body::-webkit--scrollbar {
+  height: 100%;
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform-origin: center right;
+  transition: transform 0.3s, opacity 0.3s;
+  width: 11px;
+}
+body::-webkit--scrollbar:hover {
+  transform: scaleX(1.45);
+}
+body::-webkit--scrollbar:hover,
+.has-scroll-dragging body::-webkit--scrollbar,
+.has-scroll-scrolling body::-webkit--scrollbar {
+  opacity: 1;
+}
+[data-scroll-direction="horizontal"] body::-webkit--scrollbar {
+  bottom: 0;
+  height: 10px;
+  top: auto;
+  transform: scaleY(1);
+  width: 100%;
+}
+[data-scroll-direction="horizontal"] body::-webkit--scrollbar:hover {
+  transform: scaleY(1.3);
+}
+body::-webkit--scrollbar_thumb {
+  background-color: #000;
+  border-radius: 10px;
+  cursor: -webkit-grab;
+  cursor: grab;
+  margin: 2px;
+  opacity: 0.5;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 7px;
+}
+.has-scroll-dragging body::-webkit--scrollbar_thumb {
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
+}
+[data-scroll-direction="horizontal"] body::-webkit--scrollbar_thumb {
+  bottom: 0;
+  right: auto;
+}
+body::-webkit--header {
+  position: relative;
+}
