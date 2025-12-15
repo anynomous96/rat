@@ -18,6 +18,9 @@ const session = require("express-session");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 // const adminRoutes = require('./model/admin');
+const http = require('http');
+const ngrok = require('@ngrok/ngrok');
+
 
 
 
@@ -214,3 +217,6 @@ app.get("/admin/logout", (req, res) => {
 
 
 app.listen(3000);
+
+ngrok.connect({ addr: 3000, authtoken_from_env: true })
+	.then(listener => console.log(`Ingress established at: ${listener.url()}`));
