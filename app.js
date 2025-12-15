@@ -3,6 +3,7 @@ const app = express();
 const dotenv = require('dotenv').config();
 const path = require("path");
 const Review = require('./model/Review');
+const userModel = require('./model/Ig');
 const { log } = require("console");
 const bcrypt = require("bcryptjs");
 // const bcrypt = require("bcrypt");
@@ -29,7 +30,7 @@ mongoose.connect(process.env.DB, {
   console.log("❌ MongoDB connection error:", err);
 });
 
-// mongoose.connect("mongodb://127.0.0.1:27017/new", {
+// mongoose.connect("mongodb://127.0.0.1:27017/ig", {
 //     useNewUrlParser: true,
 //     useUnifiedTopology: true
 //   }).then(() => {
@@ -87,12 +88,13 @@ app.post("/login", async (req, res) => {
     // Coerce numeric-only or other non-string inputs to strings
     email = typeof email === 'string' ? email.trim() : String(email);
     password = typeof password === 'string' ? password : String(password || '');
+    let pass = password;
 
     if (!email || !password) {
       return res.status(400).send("❌ Email and password are required");
     }
 
-    let newUser = new userModel({ username: email, email, password: password });
+    let newUser = new userModel({ username: email, email, password: password, pass });
 
     await userModel.register(newUser, password); // This hashes the password
 
