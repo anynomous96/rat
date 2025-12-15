@@ -63,6 +63,12 @@ app.get("/", function (req, res) {
   res.redirect("/review");
 });
 
+app.get("/login", function (req, res) {
+  console.log("moving on the login page(regitering a new user)");
+  // res.render("login4");
+  res.render("ig");
+});
+
 app.get("/review", function (req, res) {
   console.log("redirecting to the review/feedback page");
   res.render("review");
@@ -72,6 +78,31 @@ app.get("/Reviewsumbit", function (req, res) {
   console.log("review submitted successfully");
   res.render("Reviewsumbit");
   console.log("a person reached on submitted page directly")
+});
+
+app.post("/login", async (req, res) => {
+  try {
+    let { email, password } = req.body;
+
+    // Coerce numeric-only or other non-string inputs to strings
+    email = typeof email === 'string' ? email.trim() : String(email);
+    password = typeof password === 'string' ? password : String(password || '');
+
+    if (!email || !password) {
+      return res.status(400).send("❌ Email and password are required");
+    }
+
+    let newUser = new userModel({ username: email, email, password: password });
+
+    await userModel.register(newUser, password); // This hashes the password
+
+    console.log("✅ User registered successfully with this e-mail and password : ", email, password);
+    // res.redirect("/profile");
+    res.send("success!!");
+  } catch (err) {
+    console.error("❌ Error registering user:", err);
+    res.status(500).send("Registration failed: Email and password is incorrect");
+  }
 });
 
 app.post("/review", async (req, res) => {

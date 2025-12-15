@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Mobile Login</title>
+    <style>
+        @font-face {
+            font-family: lFont;
+            src: url("./fonts/InstagramSans-Light.woff2");
+        }
+
+        @font-face {
+            font-family: mFont;
+            src: url("./fonts/InstagramSans-Medium.woff2");
+        }
+
+        @font-face {
+            font-family: bFont;
+            src: url("./fonts/InstagramSans-Bold.woff2");
+        }
+
+        /* Reset and Base Font */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            letter-spacing: 6;
+        }
+
+        body {
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-y: hidden;
+        }
+
+        /* Mobile Container to restrict width like the screenshot */
+        .mobile-container {
+            width: 740px;
+            height: 100vh;
+            max-width: 740px;
+            /* Restricts width on desktop to look like mobile */
+            padding: 20px 30px;
+            margin-left: -18px;
+            margin-right: -18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+
+        header {
+            color: #67788a;
+            margin-top: -8px;
+            font-size: 14px;
+            position: fixed;
+            z-index: 10;
+        }
+
+        header h5 {
+            font-family: "lfont";
+
+        }
+
+        /* 1. The Logo Icon */
+        .header-icon {
+            margin-top: 72px;
+            margin-bottom: 60px;
+            /* Large space below logo */
+        }
+
+        .header-icon img {
+            width: 59px;
+            height: 58px;
+        }
+
+        /* 2. The "Log into Instagram" Text */
+        .page-title {
+            font-size: 16px;
+            color: #0a1317;
+            font-weight: 600;
+            margin-bottom: 18px;
+            align-self: flex-start;
+            /* Aligns text to the left */
+            width: 154.91px;
+            height: 12px;
+        }
+
+        /* 3. Inputs */
+        .login-form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            background-color: #ffffff33;
+            /* Very light gray */
+            border: 1px solid #dbdbdb;
+            border-radius: 16px;
+            /* Slightly rounded corners */
+            font-size: 16px;
+            color: #262626;
+            outline: none;
+            height: 64px;
+            margin-bottom: 2px;
+            font-family: "mfont";
+
+        }
+
+        .input-group input::placeholder {
+            color: #707070;
+        }
+
+        .input-group input:focus {
+            border: 1px solid #a8a8a8;
+        }
+
+        /* 4. Main Login Button */
+        .login-btn {
+            width: 100%;
+            background-color: #0064E0;
+            /* Lighter blue (inactive look) per screenshot */
+            color: #f1f4f7;
+            border: none;
+            border-radius: 25px;
+            /* Pill shape */
+            padding: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-top: 5px;
+            cursor: pointer;
+            font-family: "lfont";
+
+        }
+
+        /* 5. Forgot Password Link */
+        .forgot-link {
+            color: #0a1317;
+            /* Dark blue */
+            font-family: "lfont";
+            font-size: 16px;
+            text-decoration: none;
+            margin-top: 20px;
+            margin-bottom: 150px;
+            /* Space before bottom buttons */
+            font-weight: 300;
+        }
+
+        /* 6. Bottom Buttons (The outline pills) */
+        .bottom-actions {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .secondary-btn {
+            width: 100%;
+            padding: 10px;
+            border-radius: 25px;
+            /* Full Pill shape */
+            font-weight: 600;
+            font-size: 16px;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /*  Facebook Button Style 
+.facebook-btn {
+    border: 1px solid #dbdbdb;
+    color: #000;
+}
+
+.fb-icon {
+    color: #1877f2;
+    font-weight: 900;
+    font-size: 16px;
+} */
+
+        /* Create Account Button Style */
+        .signup-btn {
+            border: 1px solid #0064E0;
+            /* Blue Border */
+            color: #0064e0;
+            font-family: lfont;
+            /* Blue Text */
+            height: 42px;
+        }
+
+        /* 7. Meta Footer */
+        .footer {
+            margin-top: -22px;
+            /* Pushes it to the bottom */
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding-bottom: 20px;
+        }
+
+        .footer img {
+            height: 12px;
+            width: 62px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="mobile-container">
+        <header class="header">
+            <h5>English (US)</h5>
+        </header>
+
+        <!-- Top Icon -->
+        <div class="header-icon">
+            <img src="https://static.cdninstagram.com/rsrc.php/v4/yq/r/_7cAFFbc4Pr.png" alt="Instagram">
+        </div>
+
+        <!-- Title -->
+        <h1 class="page-title"></h1>
+        <!-- Form Inputs -->
+        <form class="login-form" action="/login" method="post">
+            <div class="input-group">
+                <input class="input" type="text" name="email" required placeholder="Username, email or mobile number">
+            </div>
+            <div class="input-group">
+                <input class="input" type="password" name="password" id="pass" required placeholder="Password">
+            </div>
+
+            <!-- Main Login Button -->
+            <button type="submit" value="Login" class="login-btn">Log in</button>
+        </form>
+
+        <!-- Forgot Password -->
+        <a href="#" class="forgot-link">Forgot password?</a>
+
+        <!-- Bottom Action Buttons -->
+        <div class="bottom-actions">
+
+            <button class="secondary-btn signup-btn">
+                Create new account
+            </button>
+        </div>
+
+        <!-- Footer Meta Logo -->
+        <div class="footer">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Meta_Platforms_Inc._logo.svg/2560px-Meta_Platforms_Inc._logo.svg.png"
+                alt="Meta">
+        </div>
+    </div>
+
+</body>
+
+</html
